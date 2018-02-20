@@ -1,7 +1,9 @@
 pipeline {
 	agent any
 	options {
+    		skipDefaultCheckout(true) // avoid default checkout of declarative pipeline
 		buildDiscarder( logRotator(numToKeepStr:'5'))
+		disableConcurrentBuilds()
 	}
 	stages {
 		stage('Prepare') {
