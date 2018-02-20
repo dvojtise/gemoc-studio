@@ -33,5 +33,20 @@ pipeline {
 
 		}
 	}
+	post { 
+        always { 
+            echo 'I will always say Hello again!'
+            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'didier.vojtisek@inria.fr', sendToIndividuals: true])
+        }
+        changed {
+        	step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'didier.vojtisek@inria.fr', sendToIndividuals: true])
+        }
+        unstable {
+        	step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'didier.vojtisek@inria.fr', sendToIndividuals: true])
+        }
+        failure {
+        	step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'didier.vojtisek@inria.fr', sendToIndividuals: true]))
+        }
+    }
 }
 
