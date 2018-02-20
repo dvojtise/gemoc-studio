@@ -1,6 +1,8 @@
 pipeline {
 	environment {
-		STUDIO_VARIANT = env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/") ? "Official build" : "\${JENKINS_URL}"
+		STUDIO_VARIANT = (env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/")) ? "Official build" : "\${JENKINS_URL}"
+		//STUDIO_VARIANT = env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/") ? "Official build" : "\${JENKINS_URL}"
+		ANOTHER_ENV = "${currentBuild.getNumber()}"
 		BRANCH_VARIANT = "\${BRANCH_NAME}"
 	}
 	agent any
