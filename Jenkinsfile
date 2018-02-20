@@ -5,6 +5,10 @@ pipeline {
 		buildDiscarder( logRotator(numToKeepStr:'5'))
 		disableConcurrentBuilds()
 	}
+	tools {
+        	maven 'apache-maven-latest'
+        	jdk 'jdk1.8.0-latest'
+    	}
 	stages {
 		stage('Prepare') {
 			steps {
@@ -51,8 +55,9 @@ pipeline {
 				        		//withMaven(maven: 'apache-maven-latest', jdk: 'jdk1.8.0-latest') {
 								//	sh 'mvn clean verify -Dmaven.test.error.ignore=true -Dmaven.test.failure.ignore=true \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} --errors '
 								//}
-				        		mvnHome = tool 'apache-maven-latest'
-				              	sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
+				        		//mvnHome = tool 'apache-maven-latest'
+				              	//sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
+							sh "mvn -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
 				        	}
 				    	}      
 			    	}
