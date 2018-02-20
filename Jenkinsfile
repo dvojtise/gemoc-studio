@@ -16,12 +16,10 @@ pipeline {
 			    // this will check if there is a branch with the same name as the current branch (ie. the branch containing this Jenkinsfile) and use that for the checkout, but if there is no
 			    // branch with the same name it will fall back to the master branch
 			    dir('gemoc-studio') {
-			    	def gemocstudioScm = resolveScm source: [$class: 'GitSCMSource', credentialsId: '', id: '_', remote: 'https://github.com/eclipse/gemoc-studio.git', traits: [[$class: 'BranchDiscoveryTrait']]], targets: [BRANCH_NAME, 'master']
-			        checkout gemocstudioScm
+    				checkout resolveScm(source: git('https://github.com/eclipse/gemoc-studio.git'), targets: [BRANCH_NAME,'master'])
 				}
 				dir('gemoc-studio-modeldebugging') {
-					def gemocstudiomodeldebuggingScm = resolveScm source: [$class: 'GitSCMSource', credentialsId: '', id: '_', remote: 'https://github.com/eclipse/gemoc-studio-modeldebugging.git', traits: [[$class: 'BranchDiscoveryTrait']]], targets: [BRANCH_NAME, 'master']
-					checkout gemocstudiomodeldebuggingScm
+    				checkout resolveScm(source: git('https://github.com/eclipse/gemoc-studio-modeldebugging.git'), targets: [BRANCH_NAME,'master'])
 				}
 			    echo 'Content of the workspace'
 				sh "ls"
