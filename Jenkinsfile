@@ -32,24 +32,32 @@ pipeline {
 			}
 		}
 	    stage('Build and verify') {
-	   		script {
-		    	def studioVariant
-		      	if(  env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/")){
-		      		studioVariant = "Official build"
-		      	} else {
-		      		studioVariant = "${JENKINS_URL}"
+	    	steps {
+		   		script {
+			    	def studioVariant
+			      	if(  env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/")){
+			      		studioVariant = "Official build"
+			      	} else {
+			      		studioVariant = "${JENKINS_URL}"
+			      	}
 		      	}
-	      	}
-	      	// Run the maven build with tests  
-	      	withEnv(["STUDIO_VARIANT=${studioVariant}","BRANCH_VARIANT=${BRANCH_NAME}"]){ 
-	        	sh 'printenv'         
-		      	dir ('gemoc-studio/dev_support/full_compilation') {
-		        	wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-		              // sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean verify --errors -P ignore_CI_repositories,!use_CI_repositories"
-		              sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
-		        	}
-		    	}      
-	    	}  
+		      	// Run the maven build with tests  
+		      	withEnv(["STUDIO_VARIANT=${studioVariant}","BRANCH_VARIANT=${BRANCH_NAME}"]){ 
+		        	sh 'printenv'         
+			      	dir ('gemoc-studio/dev_support/full_compilation') {
+			        	wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+			              // sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean verify --errors -P ignore_CI_repositories,!use_CI_repositories"
+			              sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
+			        	}
+			    	}      
+		    	}  
+	    	}
+	    	
+			post {
+				success {
+					junit '**/target/surefire-reports/TEST-*.xml' 
+				}
+			}
 	 	}
 		stage('Upload') {
 			when {
@@ -58,6 +66,12 @@ pipeline {
 			}
 		    steps {
 		        echo "Deploy to download.eclipse.org"
+		        				
+//				sh 'rm -rf /home/data/httpd/download.eclipse.org/gemoc/snapshots'
+//				sh 'mkdir -p /home/data/httpd/download.eclipse.org/gemoc/snapshots'
+//				sh 'cp -r repository/target/repository/* /home/data/httpd/download.eclipse.org/gemoc/snapshots'
+//				sh 'zip -R /home/data/httpd/download.eclipse.org/gemoc/snapshots/repository.zip repository/target/repository/*'
+		        
 		    }
 		}
 		stage("Archive") {
@@ -69,6 +83,7 @@ pipeline {
 		      }
 		      steps {
 		        echo "archive artifact"
+		        archiveArtifacts '**/target/products/*.zip,**/gemoc-studio/gemoc_studio/releng/org.eclipse.gemoc.gemoc_studio.updatesite/target/repository/**'
 		      }
 		}
 	}
