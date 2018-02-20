@@ -92,7 +92,7 @@ pipeline {
 	}
 	post { 
         always { 
-            echo 'I will always say Hello again!'
+            echo 'always starts'
             
             //step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'didier.vojtisek@inria.fr', sendToIndividuals: true])
             step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@gmail.com", sendToIndividuals: true])
@@ -100,16 +100,16 @@ pipeline {
             echo 'end of always' 
         }
         changed {
-            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
+//            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
         }
         unstable {
             echo 'Unstable start'
-            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
+//            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
             echo 'Unstable ends'
         }
         failure {
             echo 'failure start'
-            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
+//            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
             echo 'failure ends'
         }
     }
