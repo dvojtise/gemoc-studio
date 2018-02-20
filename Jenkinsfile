@@ -28,9 +28,48 @@ pipeline {
 	         		}
 				}
 			    echo 'Content of the workspace'
-				sh "lsa"
+				sh "ls"
 			}
-
+		}
+	    stage('Build and verify') {
+	   		script {
+		    	def studioVariant
+		      	if(  env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/")){
+		      		studioVariant = "Official build"
+		      	} else {
+		      		studioVariant = "${JENKINS_URL}"
+		      	}
+	      	}
+	      	// Run the maven build with tests  
+	      	withEnv(["STUDIO_VARIANT=${studioVariant}","BRANCH_VARIANT=${BRANCH_NAME}"]){ 
+	        	sh 'printenv'         
+		      	dir ('gemoc-studio/dev_support/full_compilation') {
+		        	wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+		              // sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean verify --errors -P ignore_CI_repositories,!use_CI_repositories"
+		              sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
+		        	}
+		    	}      
+	    	}  
+	 	}
+		stage('Upload') {
+			when {
+        		// skip this stage unless on Master branch
+        		branch "master"
+			}
+		    steps {
+		        echo "Deploy to download.eclipse.org"
+		    }
+		}
+		stage("Archive") {
+      		when {
+        		// skip this stage unless branch is NOT master
+        		not {
+          			branch "master"
+		        }
+		      }
+		      steps {
+		        echo "archive artifact"
+		      }
 		}
 	}
 	post { 
