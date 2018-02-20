@@ -100,6 +100,7 @@ pipeline {
             echo 'end of always' 
         }
         changed {
+              echo 'changede start'
 //            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
         }
         unstable {
