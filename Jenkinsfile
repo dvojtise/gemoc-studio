@@ -28,7 +28,7 @@ pipeline {
 	         		}
 				}
 			    echo 'Content of the workspace'
-				sh "lsd"
+				sh "ls"
 			}
 
 		}
@@ -39,7 +39,7 @@ pipeline {
             
             //step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'didier.vojtisek@inria.fr', sendToIndividuals: true])
             step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
-            mail bcc: '', body: 'this is the body', cc: '', from: '', replyTo: '', subject: 'This is a test', to: 'didier.vojtisek@inria.fr'  
+            //mail bcc: '', body: 'this is the body', cc: '', from: '', replyTo: '', subject: 'This is a test', to: 'didier.vojtisek@inria.fr'  
         }
         changed {
             step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
