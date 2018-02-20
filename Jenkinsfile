@@ -1,10 +1,4 @@
 pipeline {
-	environment {
-		STUDIO_VARIANT = (env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/")) ? "Official build" : "\${JENKINS_URL}"
-		//STUDIO_VARIANT = env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/") ? "Official build" : "\${JENKINS_URL}"
-		ANOTHER_ENV = "${currentBuild.getNumber()}"
-		BRANCH_VARIANT = "\${BRANCH_NAME}"
-	}
 	agent any
 	options {
 		buildDiscarder( logRotator(numToKeepStr:'5'))
@@ -40,14 +34,14 @@ pipeline {
 	    stage('Build and verify') {
 	    	steps {
 		   		script {
-			    	//def studioVariant
-			      	//if(  env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/")){
-			      	//	studioVariant = "Official build"
-			      	//} else {
-			      	//	studioVariant = "${JENKINS_URL}"
-			      	//}
+			    	def studioVariant
+			      	if(  env.JENKINS_URL.contains("https://hudson.eclipse.org/gemoc/")){
+			      		studioVariant = "Official build"
+			      	} else {
+			      		studioVariant = "${JENKINS_URL}"
+			      	}
 			      	// Run the maven build with tests  
-			      	//withEnv(["STUDIO_VARIANT=${studioVariant}","BRANCH_VARIANT=${BRANCH_NAME}"]){ 
+			      	withEnv(["STUDIO_VARIANT=${studioVariant}","BRANCH_VARIANT=${BRANCH_NAME}"]){ 
 			        	sh 'printenv'         
 				      	dir ('gemoc-studio/dev_support/full_compilation') {
 				        	wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
@@ -59,7 +53,7 @@ pipeline {
 				              	sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
 				        	}
 				    	}      
-			    	//}
+			    	}
 		    	}  
 	    	}
 			post {
