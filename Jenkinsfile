@@ -46,11 +46,11 @@ pipeline {
 				      	dir ('gemoc-studio/dev_support/full_compilation') {
 				        	wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
 				        		
-				        		withMaven(maven: 'apache-maven-latest', jdk: 'jdk1.8.0-latest') {
-									sh 'mvn clean verify -Dmaven.test.error.ignore=true -Dmaven.test.failure.ignore=true \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} --errors '
-								}
-				        		//mvnHome = tool 'apache-maven-latest'
-				              	//sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
+				        		//withMaven(maven: 'apache-maven-latest', jdk: 'jdk1.8.0-latest') {
+								//	sh 'mvn clean verify -Dmaven.test.error.ignore=true -Dmaven.test.failure.ignore=true \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} --errors '
+								//}
+				        		mvnHome = tool 'apache-maven-latest'
+				              	sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
 				        	}
 				    	}      
 			    	}
