@@ -28,7 +28,7 @@ pipeline {
 	         		}
 				}
 			    echo 'Content of the workspace'
-				sh "ls"
+				sh "lsa"
 			}
 
 		}
