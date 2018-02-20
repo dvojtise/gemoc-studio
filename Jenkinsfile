@@ -38,17 +38,22 @@ pipeline {
             echo 'I will always say Hello again!'
             
             //step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'didier.vojtisek@inria.fr', sendToIndividuals: true])
-            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
-            //mail bcc: '', body: 'this is the body', cc: '', from: '', replyTo: '', subject: 'This is a test', to: 'didier.vojtisek@inria.fr'  
+            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@gmail.com", sendToIndividuals: true])
+            //mail bcc: '', body: 'this is the body', cc: '', from: '', replyTo: '', subject: 'This is a test', to: 'didier.vojtisek@inria.fr' 
+            echo 'end of always' 
         }
         changed {
             step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
         }
         unstable {
+            echo 'Unstable start'
             step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
+            echo 'Unstable ends'
         }
         failure {
+            echo 'failure start'
             step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
+            echo 'failure ends'
         }
     }
 }
