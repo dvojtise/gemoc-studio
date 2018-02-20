@@ -18,11 +18,11 @@ pipeline {
 			    dir('gemoc-studio') {
     				checkout resolveScm(source: git('https://github.com/eclipse/gemoc-studio.git'), targets: [BRANCH_NAME,'master'])
 				}
-				dir('gemoc-studio-modeldebugging') {
-    				checkout resolveScm(source: git('https://github.com/eclipse/gemoc-studio-modeldebugging.git'), targets: [BRANCH_NAME,'master'])
-				}
-			    echo 'Content of the workspace'
-				sh "ls"
+			//	dir('gemoc-studio-modeldebugging') {
+    		//		checkout resolveScm(source: git('https://github.com/eclipse/gemoc-studio-modeldebugging.git'), targets: [BRANCH_NAME,'master'])
+			//	}
+			 //   echo 'Content of the workspace'
+			//	sh "ls"
 			}
 
 		}
