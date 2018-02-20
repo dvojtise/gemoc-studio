@@ -40,19 +40,22 @@ pipeline {
 			      	} else {
 			      		studioVariant = "${JENKINS_URL}"
 			      	}
-		      	}
-		      	// Run the maven build with tests  
-		      	withEnv(["STUDIO_VARIANT=${studioVariant}","BRANCH_VARIANT=${BRANCH_NAME}"]){ 
-		        	sh 'printenv'         
-			      	dir ('gemoc-studio/dev_support/full_compilation') {
-			        	wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-			              // sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean verify --errors -P ignore_CI_repositories,!use_CI_repositories"
-			              sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
-			        	}
-			    	}      
+			      	// Run the maven build with tests  
+			      	withEnv(["STUDIO_VARIANT=${studioVariant}","BRANCH_VARIANT=${BRANCH_NAME}"]){ 
+			        	sh 'printenv'         
+				      	dir ('gemoc-studio/dev_support/full_compilation') {
+				        	wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+				        		
+				        		withMaven(maven: 'apache-maven-latest', jdk: 'jdk1.8.0-latest') {
+									sh 'mvn clean verify -Dmaven.test.error.ignore=true -Dmaven.test.failure.ignore=true \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} --errors '
+								}
+				        		//mvnHome = tool 'apache-maven-latest'
+				              	//sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore \"-Dstudio.variant=${studioVariant}\" -Dbranch.variant=${BRANCH_VARIANT} clean verify --errors "
+				        	}
+				    	}      
+			    	}
 		    	}  
 	    	}
-	    	
 			post {
 				success {
 					junit '**/target/surefire-reports/TEST-*.xml' 
