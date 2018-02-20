@@ -8,7 +8,7 @@ pipeline {
 			steps {
 				// Wipe the workspace so we are building completely clean
   		  		// deleteDir()
-				cleanWs()
+				//cleanWs()
 				//git url: 'https://github.com/eclipse/aCute.git'
 				//checkout scm
 				// Get code from GitHub repositories
