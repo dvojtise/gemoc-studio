@@ -89,14 +89,15 @@ pipeline {
 	post { 
 		always { 
 			echo 'always starts'
-            
-            		//step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'didier.vojtisek@inria.fr', sendToIndividuals: true])
+            script { 
+            	if(  "${BRANCH_NAME}".equals("master")){
             		step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@gmail.com", sendToIndividuals: true])
-            		//mail bcc: '', body: 'this is the body', cc: '', from: '', replyTo: '', subject: 'This is a test', to: 'didier.vojtisek@inria.fr' 
-            		echo 'end of always' 
-        	}
-        	changed {
-              		echo 'changede start'
+			    }
+            } 
+        	echo 'end of always' 
+        }
+        changed {
+              		echo 'changed start'
 			//            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "didier.vojtisek@inria.fr", sendToIndividuals: true])
         	}
         	unstable {
